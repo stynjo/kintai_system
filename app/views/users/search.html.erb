@@ -1,0 +1,30 @@
+<h1>検索結果</h1>
+
+<p>検索</p>
+<%= form_tag(search_path,:method => 'get') do %>
+  <%= text_field_tag :search %>
+  <%= submit_tag 'Search', :name => nil %>
+<% end %>
+
+  <% @users.each do |user| %>
+  <div class="col-md-10 col-md-offset-1">
+    <table class="table table-condensed table-hover" id="table-users">
+      <tr>
+        <td>
+            <%= link_to user.name, user %>
+        </td>
+        <% if current_user.admin? %>
+          <td class="center"><%= format_basic_info(user.basic_time) %></td>
+          <td class="center"><%= format_basic_info(user.work_time) %></td>
+        <% end %>
+        <td class="center">
+          <% if current_user.admin? && !current_user?(user) %>
+            <%= link_to "基本情報編集", edit_basic_info_user_path(user), remote: true, class: "btn btn-success" %>
+            <%= link_to "削除", user, method: :delete,
+                data: { confirm: "削除してよろしいですか？" }, class: "btn btn-danger" %>
+          <% end %>
+        </td>
+      </tr>
+    </table>
+  </div>  
+  <% end %>
