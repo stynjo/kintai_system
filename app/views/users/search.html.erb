@@ -1,3 +1,4 @@
+<% provide(:title, '検索結果') %>
 <h1>検索結果</h1>
 
 <p>検索</p>
@@ -6,17 +7,23 @@
   <%= submit_tag 'Search', :name => nil %>
 <% end %>
 
-  <% @users.each do |user| %>
-  <div class="col-md-10 col-md-offset-1">
-    <table class="table table-condensed table-hover" id="table-users">
+<div class="col-md-10 col-md-offset-1">
+  <table class="table table-condensed table-hover" id="table-users">
+    <thead>
+      <tr>
+        <th><%= User.human_attribute_name :name %></th>
+      </tr>
+    </thead>
+
+    <% @users.each do |user| %>
       <tr>
         <td>
+          <% if current_user.admin? %>
             <%= link_to user.name, user %>
+          <% else %>
+            <%= user.name %>
+          <% end %>
         </td>
-        <% if current_user.admin? %>
-          <td class="center"><%= format_basic_info(user.basic_time) %></td>
-          <td class="center"><%= format_basic_info(user.work_time) %></td>
-        <% end %>
         <td class="center">
           <% if current_user.admin? && !current_user?(user) %>
             <%= link_to "基本情報編集", edit_basic_info_user_path(user), remote: true, class: "btn btn-success" %>
@@ -25,6 +32,6 @@
           <% end %>
         </td>
       </tr>
-    </table>
-  </div>  
-  <% end %>
+    <% end %>
+  </table>
+</div>
