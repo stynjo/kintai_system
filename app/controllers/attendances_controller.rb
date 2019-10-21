@@ -30,17 +30,40 @@ class AttendancesController < ApplicationController
   end
 
   def update_one_month
-    ActiveRecord::Base.transaction do # トランザクションを開始します。
-      attendances_params.each do |id, item|
-        attendance = Attendance.find(id)
-        attendance.update_attributes!(item)
+    success = true
+    
+      ActiveRecord::Base.transaction do # トランザクション開始
+
+        attendances_params.each do |id, item|
+          if item['started_at'].present? && item['finished_at'].present?
+            attendance = Attendance.find(id)
+            attendance.update_attributes!(item)
+          elsif item['started_at'].empty? && item['finished_at'].empty?
+            attendance = Attendance.find(id)
+            attendance.update_attributes!(item)
+          else
+            ActiveRecord::Rollback # トランザクション内のＤＢ操作をロールバック
+            success = false
+            break
+          end
       end
     end
-    flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
-    redirect_to user_url(date: params[:date])
-  rescue ActiveRecord::RecordInvalid # トランザクションによるエラーの分岐です。
-    flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
-    redirect_to attendances_edit_one_month_user_url(date: params[:date])
+
+    # トランザクション成功後の処理(ロールバックを含む)
+    if success 
+      flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
+      redirect_to user_url(date: params[:date])
+    else
+      flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
+      redirect_to attendances_edit_one_month_user_url(date: params[:date])
+    end
+  
+
+    # トランザクション失敗後の処理(更新又はロールバックに失敗=システムエラー)
+    rescue => e
+      flash[:danger] = e.message
+      redirect_to attendances_edit_one_month_user_url(date: params[:date])
+  
   end
 
   private
