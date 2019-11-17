@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+
   root 'static_pages#top'
   get '/signup', to: 'users#new'
   get '/search', to: 'users#search'
@@ -16,5 +17,8 @@ Rails.application.routes.draw do
       patch 'attendances/update_one_month' 
     end
     resources :attendances, only: :update
+  end
+  
+  resources :bases do
   end
 end
