@@ -28,6 +28,9 @@ class AttendancesController < ApplicationController
 
   def edit_one_month
   end
+  
+  def edit_overwork_request
+  end
 
   def update_one_month
     success = true
