@@ -11,4 +11,7 @@ module AttendancesHelper
     format("%.2f", (((finish.floor_to(15.minutes)-start.floor_to(15.minutes)) / 60)) / 60.0)
   end
   
+  def over_working_times(over,finish)
+    format("%.2f", (((over.floor_to(15.minutes)-finish.floor_to(15.minutes)) / 60)) / 60.0)
+  end
 end
