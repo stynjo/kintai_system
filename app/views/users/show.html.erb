@@ -81,7 +81,7 @@
             <% end %>
           </td>
           <td><%= day.note %></td>
-          <td></td>
+          <td><%= l(day.overwork_time, format: :time) if day.overwork_time.present?%></td>
           <td></td>
           <td></td>
           <td></td>

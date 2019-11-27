@@ -29,9 +29,6 @@ class AttendancesController < ApplicationController
   def edit_one_month
   end
   
-  def edit_overwork_request
-  end
-
   def update_one_month
     success = true
     
@@ -68,6 +65,22 @@ class AttendancesController < ApplicationController
       redirect_to attendances_edit_one_month_user_url(date: params[:date])
   
   end
+  
+  def edit_overwork_request
+    @user = User.find(params[:id])
+    @attendance = @user.attendances.find(params[:id])
+  end
+  
+  def update_overwork_request
+    @user = User.find(params[:id])
+    @attendance = @user.attendances.find(params[:id])
+    if @attendance.update_attributes(overwork_params)
+      flash[:success] = "残業申請しました。"
+      redirect_to @user
+    else
+      render '@user'
+    end  
+  end
 
   private
 
@@ -75,6 +88,11 @@ class AttendancesController < ApplicationController
     def attendances_params
       params.require(:user).permit(attendances: [:started_at, :finished_at, :note])[:attendances]
     end
+    
+    def overwork_params
+      params.require(:attendance).permit(:overwork_time, :overwork_note, :overwork_tomorrow, :overwork_superior_id)
+    end
+    
 
     # beforeフィルター
 

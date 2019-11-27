@@ -61,6 +61,8 @@ class UsersController < ApplicationController
   def search
     @users = User.search(params[:search])
   end
+  
+ 
 
   private
 
@@ -70,6 +72,11 @@ class UsersController < ApplicationController
 
     def basic_info_params
       params.require(:user).permit(:department, :basic_time, :work_time)
+    end
+    
+    
+    def overwork_params
+      params.require(:attendance).permit(:overwork_time, :overwork_note, :overwork_tomorrow, :overwork_superior_id)
     end
 
     
