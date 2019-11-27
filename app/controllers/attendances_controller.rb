@@ -67,12 +67,12 @@ class AttendancesController < ApplicationController
   end
   
   def edit_overwork_request
-    @user = User.find(params[:id])
+    @user = current_user
     @attendance = @user.attendances.find(params[:id])
   end
   
   def update_overwork_request
-    @user = User.find(params[:id])
+    @user = current_user
     @attendance = @user.attendances.find(params[:id])
     if @attendance.update_attributes(overwork_params)
       flash[:success] = "残業申請しました。"
