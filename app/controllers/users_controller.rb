@@ -62,7 +62,8 @@ class UsersController < ApplicationController
     @users = User.search(params[:search])
   end
   
- 
+  def edit_overwork_request_approval
+  end 
 
   private
 
