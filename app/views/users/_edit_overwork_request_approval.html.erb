@@ -1,13 +1,47 @@
-<div class="modal-dialog">
+
+<div class="modal-dialog modal-lg" role="document">
   <div class="modal-content">
-    <div class="modal-header">
-      <h5 class="modal-title">残業申請</h5>
-      <button type="button" class="close" data-dismiss="modal">&times;</button>
-    </div>
-    <div class="modal-body">
-    <p>モーダルで表が表示される部分。</p>
-    </div>
-    <div calss="modal-footer"></div>
-    <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+      <div class="modal-body">
+        <div class="form-group field">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button><br><br>
+          <% @users.each do |user| %>
+            <h4 class="modal-title" id="exampleModalLabel" align="center">【<%= user.name %>からの残業申請】</h4><br>
+            <table class = "table-bordered table-condensed">
+              <thead>
+                <tr>
+                  <th>日付</th>
+                  <th>曜日</th>
+                  <th>終了予定時間</th>
+                  <th>指定勤務終了時間</th>
+                  <th>時間外時間</th>
+                  <th>業務処理内容</th>
+                  <th>指示者確認㊞</th>
+                  <th>変更</th>
+                  <th>勤怠を確認する</th>
+                </tr>
+              </thead>
+              <tbody> 
+              <% @attendances.each do |at| %>
+               <% if at.user_id == user.id %>
+                <tr>
+                  <td><%= at.worked_on.to_s(:date) %></td>
+                  <td><%= %w{日 月 火 水 木 金 土}[at.worked_on.wday] %></td>
+                  <td><%= at.overwork_time.to_s(:time)  if at.overwork_time.present? %></td>
+                  <td></td>
+                  <td></td>
+                  <td><%= at.overwork_note %></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <% end %>
+                <% end %>
+              </tbody>
+            </table><br>
+          <% end %>
+        </div>
+      </div>
   </div>
 </div>

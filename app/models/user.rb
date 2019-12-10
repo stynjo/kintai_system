@@ -3,6 +3,8 @@ class User < ApplicationRecord
   # 「remember_token」という仮想の属性を作成します。
   attr_accessor :remember_token
   before_save { self.email = email.downcase }
+  
+  scope :overwork_user, ->(current_user_id) { where(overwork_superior_id: current_user_id) }
 
   validates :name, presence: true, length: { maximum: 50 }
 
