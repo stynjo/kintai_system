@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
   
     # アクセスしたユーザーが現在ログインしているユーザーか確認します。
   def correct_user
-      redirect_to(root_url)  unless current_user?(@user) or current_user.admin?
+      redirect_to(root_url)  unless current_user?(@user) or current_user.admin? or current_user.superior?
   end
 
     # システム管理権限所有かどうか判定します。
