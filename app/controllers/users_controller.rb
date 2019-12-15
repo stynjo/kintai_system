@@ -87,10 +87,7 @@ class UsersController < ApplicationController
     def overwork_params
       params.require(:attendance).permit(:overwork_time, :overwork_note, :overwork_tomorrow, :overwork_superior_id)
     end
-    
-    def update_overwork_approval_params
-       params.require(:user).permit(attendances: [:overwork_enum, :overwork_request_change])[:attendances]
-    end
+  
 
     
 end
