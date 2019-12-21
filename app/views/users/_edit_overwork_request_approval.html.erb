@@ -26,7 +26,7 @@
               <tbody> 
               <% @attendances.each do |at| %>
                 <% if at.user_id == user.id %>
-                  <%= fields_for at do |af| %>
+                  <%= fields_for "attendances[]", at do |af| %>
                     <tr>
                       <td><%= at.worked_on.to_s(:date) %></td>
                       <td><%= %w{日 月 火 水 木 金 土}[at.worked_on.wday] %></td>

@@ -64,13 +64,20 @@ class UsersController < ApplicationController
   
   def edit_overwork_request_approval
     @attendances = Attendance.where(overwork_superior_id: current_user.id)
+    debugger
     @users = User.joins(:attendances).group(:name).where(attendances: {overwork_superior_id: current_user.id})
   end 
 
   def update_overwork_request_approval
-    @user = User.find(params[:id])
-    @attendances = Attendance.find(params[:id])
-    debugger
+    ActiveRecord::Base.transaction do 
+      overwork_request_approval_params.each do |id, approval|
+        attendance = Attendance.find(id)
+        attendance.update_attributes!(approval)
+      end
+   end
+   redirect_to user_url
+   rescue ActiveRecord::RecordInvalid
+   redirect_to root_url
   end
   
   private
@@ -88,6 +95,8 @@ class UsersController < ApplicationController
       params.require(:attendance).permit(:overwork_time, :overwork_note, :overwork_tomorrow, :overwork_superior_id)
     end
   
-
+    def overwork_request_approval_params
+       params.permit(attendances: [:overwork_enum, :overwork_request_change])[:attendances]
+    end
     
 end

@@ -20,12 +20,12 @@ ActiveRecord::Schema.define(version: 20191212082249) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "overwork_time" #残業時間
-    t.string "overwork_note" #備考
-    t.boolean "overwork_tomorrow" #終了予定時間が翌日かどうかを示します
-    t.integer "overwork_superior_id" #どの上長に申請するかを選びます
-    t.integer "overwork_enum", default: 1 #enum overwork_enum: [['なし',0], ['申請中', 1], ['承認', 2],['否認', 3]] デフォルトで申請中にしています。
-    t.boolean "overwork_request_change" #申請を承認拒否するかのチェックボタン
+    t.datetime "overwork_time"
+    t.string "overwork_note"
+    t.boolean "overwork_tomorrow"
+    t.integer "overwork_superior_id"
+    t.integer "overwork_enum", default: 1
+    t.boolean "overwork_request_change"
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
