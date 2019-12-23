@@ -64,7 +64,6 @@ class UsersController < ApplicationController
   
   def edit_overwork_request_approval
     @attendances = Attendance.where(overwork_superior_id: current_user.id)
-    debugger
     @users = User.joins(:attendances).group(:name).where(attendances: {overwork_superior_id: current_user.id})
   end 
 
@@ -75,8 +74,10 @@ class UsersController < ApplicationController
         attendance.update_attributes!(approval)
       end
    end
+   flash[:success] = "残業申請を更新しました。"
    redirect_to user_url
    rescue ActiveRecord::RecordInvalid
+   flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
    redirect_to root_url
   end
   

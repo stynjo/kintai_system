@@ -87,7 +87,8 @@
           <td><%= l(day.overwork_time, format: :time) if day.overwork_time.present?%></td>
           <td><%= sum_overworks = over_working_times(day.overwork_time, day.finished_at) if day.overwork_time.present? && day.finished_at.present? %></td>
           <td><%= day.overwork_note if day.overwork_note.present? %></td>
-          <td><%= User.find_by(id: day.overwork_superior_id).name + "に残業申請中" if day.overwork_superior_id.present? %></td>
+          <td><%= approval_result(day) if day.overwork_superior_id.present? %>
+          </td>
         </tr>
       <% end %>
     </tbody>
