@@ -16,8 +16,15 @@
       <td>月末日：<%= l(@last_day, format: :short) %></td>
     </tr>
   </table>
-  <%= link_to "残業申請のお知らせ", edit_overwork_request_approval_user_path, remote: true %>
-  <div id="edit_overwork_request_approval" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+  <div class="superior-informaiton">
+    <% if @over_approval_number > 0 %>
+    <%= link_to "残業申請のお知らせ", edit_overwork_request_approval_user_path, remote: true %>
+  <span class="request-number" >
+    <%=   @over_approval_number.to_s + "件のお知らせがあります" %>
+    <div id="edit_overwork_request_approval" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+    <% end %>
+    </span>
+  </div>
 </div>
 
 <div class="btn-users-show">

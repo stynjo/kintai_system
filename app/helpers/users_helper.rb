@@ -10,7 +10,7 @@ module UsersHelper
   end
   
   def approval_result(result)
-    if result.overwork_enum == '申請中' || result.overwork_enum == 'なし' || result.overwork_enum.nil
+    if result.overwork_enum == '申請中' || result.overwork_enum == 'なし' || result.overwork_enum.nil?
       return  User.find_by(id: result.overwork_superior_id).name + "に残業申請中" 
     elsif result.overwork_enum == '承認' 
       return "残業承認" 

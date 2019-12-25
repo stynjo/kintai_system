@@ -11,6 +11,7 @@ class UsersController < ApplicationController
 
   def show
     @worked_sum = @attendances.where.not(started_at: nil).count
+    @over_approval_number = Attendance.where(overwork_superior_id: @user.id).where(overwork_enum: 1).size
   end
 
   def new
@@ -63,8 +64,8 @@ class UsersController < ApplicationController
   end
   
   def edit_overwork_request_approval
-    @attendances = Attendance.where(overwork_superior_id: current_user.id)
-    @users = User.joins(:attendances).group(:name).where(attendances: {overwork_superior_id: current_user.id})
+    @attendances = Attendance.where(overwork_superior_id: current_user.id).where(overwork_enum: 1)
+    @users = User.joins(:attendances).group(:name).where(attendances: {overwork_superior_id: current_user.id}).where(attendances: {overwork_enum: 1})
   end 
 
   def update_overwork_request_approval
