@@ -21,9 +21,10 @@
     <%= link_to "残業申請のお知らせ", edit_overwork_request_approval_user_path, remote: true %>
   <span class="request-number" >
     <%=   @over_approval_number.to_s + "件のお知らせがあります" %>
+  </span>
     <div id="edit_overwork_request_approval" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
     <% end %>
-    </span>
+    
   </div>
 </div>
 
@@ -105,7 +106,12 @@
       <tr>
         <td colspan="6">総合勤務時間</td>
         <td colspan="2">在社時間合計</td>
-        <td colspan="5">所属長承認(仮)</td>
+        <td colspan="5">
+        <%= form_with(model: @attendance, url: "#", local: true, method: :patch) do |f| %>
+            <%= f.collection_select :month_superior_id, User.where.not(id: current_user.id).where.not(superior: false), :id, :name %>
+            <%= f.submit "申請", class: "btn btn-primary" %>
+          <% end %>
+        </td>
       </tr>
       <tr>
         <td colspan="2"><%= @attendances.count %></td>
