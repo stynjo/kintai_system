@@ -81,6 +81,25 @@ class AttendancesController < ApplicationController
       render '@user'
     end  
   end
+  
+  def update_month_request
+     attendance = Attendance.find_by(user_id: params[:id], worked_on: params[:date])
+       if (params[:month_superior_id] == "2") || (params[:month_superior_id] == "3") 
+         attendance.update_attributes(month_superior_id: params[:month_superior_id])
+         redirect_to user_url
+         flash[:success] = "所属長承認を申請しました。"
+       else
+         redirect_to user_url
+         flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。" 
+       end
+      
+  end
+  
+  def month_request_approval
+    @month_request = Attendance.where(month_superior_id: 2).or Attendance.where(month_superior_id: 3)
+    requested_user = @month_request.pluck(:user_id)
+    @users = User.find(requested_user)
+  end
 
   private
 
@@ -92,6 +111,8 @@ class AttendancesController < ApplicationController
     def overwork_params
       params.require(:attendance).permit(:overwork_time, :overwork_note, :overwork_tomorrow, :overwork_superior_id, :overwork_enum)
     end
+    
+    
     
 
     # beforeフィルター

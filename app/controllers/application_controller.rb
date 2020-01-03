@@ -38,7 +38,7 @@ class ApplicationController < ActionController::Base
   @one_month = [*@first_day..@last_day]
 
   @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
-
+  
   unless @one_month.count == @attendances.count
     ActiveRecord::Base.transaction do
       @one_month.each { |day| @user.attendances.create!(worked_on: day) }

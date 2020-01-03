@@ -1,0 +1,39 @@
+
+<div class="modal-dialog modal-lg" role="document">
+  <div class="modal-content">
+      <div class="modal-body">
+        <div class="form-group field">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+           </button><br><br>
+           <div class="modal-body">
+             <% @users.each do |user| %>
+               <h4><%= "【#{user.name}からの１ヶ月分の勤怠申請】" %></h4>
+                 <table class = "table-bordered table-condensed">
+                   <thead>
+                     <tr>
+                       <th>月</th> 
+                       <th>指示者確認㊞</th>
+                       <th>変更</th>
+                       <th>勤怠を変更する</th>
+                     </tr>
+                  </thead>
+                <% @attendances = @month_request.where(user_id: user.id)%>
+                <% @attendances.each do |at| %>
+                    <tbody>
+                      <tr>
+                        <td><%= at.worked_on.month %>月</td>
+                        <td>"test"</td>
+                        <td>"test"</td>
+                        <td>"test"</td>
+                      </tr>
+                    </tbody>
+                <% end %>  
+                </table>
+             <% end %>    
+           </div>
+        </div>
+      </div>
+  </div>
+</div>
+

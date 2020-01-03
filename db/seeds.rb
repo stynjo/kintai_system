@@ -18,6 +18,8 @@ User.create!(name:  "superior2",
              password_confirmation: "password",
              superior: true)
              
+       
+             
 
 60.times do |n|
   name  = Faker::Name.name
