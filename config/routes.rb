@@ -25,6 +25,7 @@ Rails.application.routes.draw do
         get 'edit_overwork_request'
         patch 'update_overwork_request'
          get 'month_request_approval'
+         patch 'update_month_request_approval'
       end
     end
   end

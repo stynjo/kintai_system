@@ -1,10 +1,12 @@
 class AttendancesController < ApplicationController
-  before_action :set_user, only: [:edit_one_month, :update_one_month]
+  before_action :set_user, only: [:edit_one_month, :update_one_month, :month_request_approval]
   before_action :logged_in_user, only: [:update, :edit_one_month]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
   before_action :set_one_month, only: :edit_one_month
 
   UPDATE_ERROR_MSG = "勤怠登録に失敗しました。やり直してください。"
+  
+
 
   def update
     @user = User.find(params[:user_id])
@@ -92,13 +94,22 @@ class AttendancesController < ApplicationController
          redirect_to user_url
          flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。" 
        end
-      
   end
   
   def month_request_approval
     @month_request = Attendance.where(month_superior_id: 2).or Attendance.where(month_superior_id: 3)
     requested_user = @month_request.pluck(:user_id)
     @users = User.find(requested_user)
+  end
+  
+  def update_month_request_approval
+    @user = current_user
+    monthly_request_approval_params.each do |id, monthly|
+      approval = Attendance.find(id)
+      approval.update_attributes(monthly)
+    end
+    flash[:success] = "所属長承認申請を更新しました。"
+    redirect_to @user
   end
 
   private
@@ -112,6 +123,9 @@ class AttendancesController < ApplicationController
       params.require(:attendance).permit(:overwork_time, :overwork_note, :overwork_tomorrow, :overwork_superior_id, :overwork_enum)
     end
     
+    def monthly_request_approval_params
+      params.permit(attendances: [:monthly_enum, :monthly_request_change])[:attendances]
+    end
     
     
 
