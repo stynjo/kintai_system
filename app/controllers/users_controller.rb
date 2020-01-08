@@ -12,6 +12,10 @@ class UsersController < ApplicationController
   def show
     @worked_sum = @attendances.where.not(started_at: nil).count
     @over_approval_number = Attendance.where(overwork_superior_id: @user.id).where(overwork_enum: 1).size
+    @monthly_request_number = Attendance.where(month_superior_id: @user.id).where(monthly_enum: 1).size
+    @at =  @attendances.first
+   
+   
   end
 
   def new
@@ -63,11 +67,13 @@ class UsersController < ApplicationController
     @users = User.search(params[:search])
   end
   
+
   def edit_overwork_request_approval
     @attendances = Attendance.where(overwork_superior_id: current_user.id).where(overwork_enum: 1)
     @users = User.joins(:attendances).group(:name).where(attendances: {overwork_superior_id: current_user.id}).where(attendances: {overwork_enum: 1})
   end 
-
+  
+  
   def update_overwork_request_approval
     ActiveRecord::Base.transaction do 
       overwork_request_approval_params.each do |id, approval|

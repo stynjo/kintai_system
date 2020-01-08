@@ -84,10 +84,12 @@ class AttendancesController < ApplicationController
     end  
   end
   
+  #各ユーザーからの勤怠認証申請
   def update_month_request
      attendance = Attendance.find_by(user_id: params[:id], worked_on: params[:date])
-       if (params[:month_superior_id] == "2") || (params[:month_superior_id] == "3") 
-         attendance.update_attributes(month_superior_id: params[:month_superior_id])
+       if (params[:attendance][:month_superior_id] == "2") || (params[:attendance][:month_superior_id] == "3") 
+         attendance.update_attributes(update_month_request_params)
+         
          redirect_to user_url
          flash[:success] = "所属長承認を申請しました。"
        else
@@ -96,12 +98,14 @@ class AttendancesController < ApplicationController
        end
   end
   
+  #勤怠認証申請のおしらせ
   def month_request_approval
-    @month_request = Attendance.where(month_superior_id: 2).or Attendance.where(month_superior_id: 3)
+    @month_request = Attendance.where(month_superior_id: 2).where(monthly_enum: "申請中") && Attendance.where(month_superior_id: 3).where(monthly_enum: "申請中")
     requested_user = @month_request.pluck(:user_id)
     @users = User.find(requested_user)
   end
   
+  #勤怠認証申請の更新
   def update_month_request_approval
     @user = current_user
     monthly_request_approval_params.each do |id, monthly|
@@ -121,6 +125,10 @@ class AttendancesController < ApplicationController
     
     def overwork_params
       params.require(:attendance).permit(:overwork_time, :overwork_note, :overwork_tomorrow, :overwork_superior_id, :overwork_enum)
+    end
+    
+    def update_month_request_params
+     params.require(:attendance).permit(:monthly_enum, :month_superior_id)
     end
     
     def monthly_request_approval_params
