@@ -100,7 +100,7 @@ class AttendancesController < ApplicationController
   
   #勤怠認証申請のおしらせ
   def month_request_approval
-    @month_request = Attendance.where(month_superior_id: 2).where(monthly_enum: "申請中") && Attendance.where(month_superior_id: 3).where(monthly_enum: "申請中")
+    @month_request = Attendance.where(month_superior_id: current_user).where(monthly_enum: "申請中") 
     requested_user = @month_request.pluck(:user_id)
     @users = User.find(requested_user)
   end

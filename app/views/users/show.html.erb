@@ -17,6 +17,7 @@
     </tr>
   </table>
   <div class="superior-informaiton">
+    <% if @user == current_user %>
     <% if @monthly_request_number > 0 %>
       <%= link_to "所属長承認申請のお知らせ", month_request_approval_user_attendance_path(@user), remote: true %>
       <span class="request-number" >
@@ -29,7 +30,7 @@
     <%= @over_approval_number.to_s + "件のお知らせがあります" %>
   </span>
     <% end %>
-    
+    <% end %>
   </div>
 </div>
 
@@ -115,13 +116,21 @@
         <td colspan="6">総合勤務時間</td>
         <td colspan="2">在社時間合計</td>
         <td colspan="5">
-         
+          <% if @at.monthly_enum == "承認"%>
+            所属長承認済
+          <% elsif  @at.monthly_enum == "否認"%>
+            所属長より否認されました。
+          <% else %>
+            所属長承認未 
+          <% end %>
+          
             <%= form_with(model: @at, url: attendances_update_month_request_user_path(@user, params: {date: @first_day}), local: true, method: :patch) do |f| %>
+            <% if @user == current_user %>
               <%= f.collection_select :month_superior_id, User.where.not(id: current_user.id).where.not(superior: false), :id, :name %>
                <%= f.hidden_field :monthly_enum, {value: "申請中"} %>
                <%= f.submit "申請", class: "btn btn-primary" %>
             <% end %>
-
+            <% end %>
         </td>
       </tr>
       <tr>

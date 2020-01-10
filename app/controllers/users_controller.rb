@@ -14,8 +14,6 @@ class UsersController < ApplicationController
     @over_approval_number = Attendance.where(overwork_superior_id: @user.id).where(overwork_enum: 1).size
     @monthly_request_number = Attendance.where(month_superior_id: @user.id).where(monthly_enum: 1).size
     @at =  @attendances.first
-   
-   
   end
 
   def new
