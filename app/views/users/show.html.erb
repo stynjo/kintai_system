@@ -17,6 +17,7 @@
     </tr>
   </table>
   <div class="superior-informaiton">
+    <%= link_to "勤怠変更申請のお知らせ", change_attendance_path, remote: true %>
     <% if @user == current_user %>
     <% if @monthly_request_number > 0 %>
       <%= link_to "所属長承認申請のお知らせ", month_request_approval_user_attendance_path(@user), remote: true %>
@@ -144,3 +145,4 @@
 
 <div id="month_request_approval" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 <div id="edit_overwork_request_approval" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id="change_attendance_month" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

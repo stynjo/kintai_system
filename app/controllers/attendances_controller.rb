@@ -37,10 +37,10 @@ class AttendancesController < ApplicationController
       ActiveRecord::Base.transaction do # トランザクション開始
 
         attendances_params.each do |id, item|
-          if item['started_at'].present? && item['finished_at'].present?
+          if item['started_at'].present? && item['finished_at'].present? && item['change_attendance_id'].present?
             attendance = Attendance.find(id)
             attendance.update_attributes!(item)
-          elsif item['started_at'].empty? && item['finished_at'].empty?
+          elsif item['started_at'].empty? && item['finished_at'].empty? && item['change_attendance_id'].empty?
             attendance = Attendance.find(id)
             attendance.update_attributes!(item)
           else
@@ -115,12 +115,17 @@ class AttendancesController < ApplicationController
     flash[:success] = "所属長承認申請を更新しました。"
     redirect_to @user
   end
+  
+  #勤怠変更のおしらせ
+  def change_attendance_month
+    @request_su = Attendance.where(change_attendance_id: current_user)
+  end
 
   private
 
     # 1ヶ月分の勤怠情報を扱います。
     def attendances_params
-      params.require(:user).permit(attendances: [:started_at, :finished_at, :note])[:attendances]
+      params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :change_attendance_id])[:attendances]
     end
     
     def overwork_params

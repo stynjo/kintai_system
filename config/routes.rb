@@ -8,6 +8,9 @@ Rails.application.routes.draw do
   get    '/login', to: 'sessions#new'
   post   '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
+  
+  #勤怠変更のお知らせ
+  get '/change_attendance', to: 'attendances#change_attendance_month'
 
   resources :users do
     member do
