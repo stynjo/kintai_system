@@ -119,6 +119,12 @@ class AttendancesController < ApplicationController
   #勤怠変更のおしらせ
   def change_attendance_month
     @request_su = Attendance.where(change_attendance_id: current_user)
+    user = @request_su.pluck(:user_id)
+    @users = User.find(user)
+  end
+  
+  #勤怠変更更新
+  def update_change_attendance_month
   end
 
   private

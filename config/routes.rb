@@ -21,7 +21,7 @@ Rails.application.routes.draw do
       patch 'attendances/update_month_request'
       get 'edit_overwork_request_approval'
       patch 'update_overwork_request_approval' 
-     
+      patch 'attendances/update_change_attendance_month'
     end
    resources :attendances do
       member do
