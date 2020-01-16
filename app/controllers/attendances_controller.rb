@@ -37,10 +37,10 @@ class AttendancesController < ApplicationController
       ActiveRecord::Base.transaction do # トランザクション開始
 
         attendances_params.each do |id, item|
-          if item['started_at'].present? && item['finished_at'].present? && item['change_attendance_id'].present?
+          if item['edit_started_at'].present? && item['edit_finished_at'].present? && item['change_attendance_id'].present?
             attendance = Attendance.find(id)
             attendance.update_attributes!(item)
-          elsif item['started_at'].empty? && item['finished_at'].empty? && item['change_attendance_id'].empty?
+          elsif item['edit_started_at'].empty? && item['edit_finished_at'].empty? && item['change_attendance_id'].empty?
             attendance = Attendance.find(id)
             attendance.update_attributes!(item)
           else
@@ -125,13 +125,20 @@ class AttendancesController < ApplicationController
   
   #勤怠変更更新
   def update_change_attendance_month
+    @user = current_user
+    change_at_approval_params.each do |id, monthly|
+      approval = Attendance.find(id)
+      approval.update_attributes(monthly)
+    end
+    flash[:success] = "勤怠変更申請を更新しました。"
+    redirect_to @user
   end
 
   private
 
     # 1ヶ月分の勤怠情報を扱います。
     def attendances_params
-      params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :change_attendance_id])[:attendances]
+      params.require(:user).permit(attendances: [:edit_started_at, :edit_finished_at, :note, :change_attendance_id, :change_at_enum])[:attendances]
     end
     
     def overwork_params
@@ -146,7 +153,9 @@ class AttendancesController < ApplicationController
       params.permit(attendances: [:monthly_enum, :monthly_request_change])[:attendances]
     end
     
-    
+    def change_at_approval_params
+      params.permit(attendances: [:change_at_enum, :change_at_change])[:attendances]
+    end
 
     # beforeフィルター
 

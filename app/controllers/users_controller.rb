@@ -13,6 +13,7 @@ class UsersController < ApplicationController
     @worked_sum = @attendances.where.not(started_at: nil).count
     @over_approval_number = Attendance.where(overwork_superior_id: @user.id).where(overwork_enum: 1).size
     @monthly_request_number = Attendance.where(month_superior_id: @user.id).where(monthly_enum: 1).size
+    @change_attendance_number =  Attendance.where(change_attendance_id: @user.id).where(change_at_enum: 1).size
     @at =  @attendances.first
   end
 

@@ -6,6 +6,7 @@ class Attendance < ApplicationRecord
   
   enum overwork_enum:  { "なし" => 0, "申請中" => 1, "承認" => 2, "否認" => 3 }, _prefix: true
   enum monthly_enum:  { "なし" => 0, "申請中" => 1, "承認" => 2, "否認" => 3 }, _prefix: true
+  enum change_at_enum:  { "なし" => 0, "申請中" => 1, "承認" => 2, "否認" => 3 }, _prefix: true
   
  
 

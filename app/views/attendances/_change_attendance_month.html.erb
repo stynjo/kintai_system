@@ -1,4 +1,4 @@
-<div class="modal-dialog">
+<div class="modal-dialog modal-lg">
   <div class="modal-content">
     <div class="modal-header">
       <h3 class="modal-title">勤怠変更のお知らせ</h3>
@@ -32,24 +32,30 @@
             <tbody>
               <td><%=  l(at.worked_on, format: :short) %></td>
               <td><%= $days_of_the_week[at.worked_on.wday] %></td>
-              <td><%= l(at.started_at, format: :hour) %>
+              <td><%= l(at.started_at, format: :hour) if at.started_at.present? %>
                 <%= colon if at.started_at.present? %>
-                <%= l(at.started_at.floor_to(15.minutes), format: :min) %>
+                <%= l(at.started_at.floor_to(15.minutes), format: :min) if at.started_at.present? %>
               </td>
-              <td><%= l(at.finished_at, format: :hour) %>
+              <td><%= l(at.finished_at, format: :hour) if at.finished_at.present? %>
                 <%= colon if at.finished_at.present? %>
-                <%= l(at.finished_at.floor_to(15.minutes), format: :min) %></td>
+                <%= l(at.finished_at.floor_to(15.minutes), format: :min) if at.finished_at.present? %>
+              </td>
+              <td><%= l(at.edit_started_at, format: :hour) if at.edit_started_at.present? %>
+                <%= colon if at.edit_started_at.present? %>
+                <%= l(at.edit_started_at.floor_to(15.minutes), format: :min) if at.edit_started_at.present? %></td>
+              <td><%= l(at.edit_finished_at, format: :hour) if at.edit_finished_at.present? %>
+                <%= colon if at.edit_finished_at.present? %>
+                <%= l(at.edit_finished_at.floor_to(15.minutes), format: :min) if at.edit_finished_at.present? %></td>
               <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td><%= af.select :change_at_enum, Attendance.change_at_enums.keys %></td>
+              <td><%= af.check_box :change_at_change, {}, "true", "false" %></td>
+              <td><%= link_to "確認", user_path(id: user.id, date: at.worked_on), class: "btn btn-primary" %></td>
             </tbody>
             <% end %>  
             <% end %>
           </table>
-        <% end %>  
+        <% end %> 
+        <%= f.submit "変更を送信する", class: "btn btn-primary" %>
       <% end %>
     </div>
   </div>

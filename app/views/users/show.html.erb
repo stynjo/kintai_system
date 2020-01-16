@@ -17,20 +17,29 @@
     </tr>
   </table>
   <div class="superior-informaiton">
-    <%= link_to "勤怠変更申請のお知らせ", change_attendance_path, remote: true %>
     <% if @user == current_user %>
-    <% if @monthly_request_number > 0 %>
-      <%= link_to "所属長承認申請のお知らせ", month_request_approval_user_attendance_path(@user), remote: true %>
+    
+      <% if @change_attendance_number > 0 %>
+        <%= link_to "勤怠変更申請のお知らせ", change_attendance_path, remote: true %>
       <span class="request-number" >
-        <%= @monthly_request_number.to_s + "件のお知らせがあります" %><br>
-        </span>
-    <% end %>
-    <% if @over_approval_number > 0 %>
-    <%= link_to "残業申請のお知らせ",  edit_overwork_request_approval_user_path, remote: true %>
-       <span class="request-number" >
-    <%= @over_approval_number.to_s + "件のお知らせがあります" %>
-  </span>
-    <% end %>
+        <%= @change_attendance_number.to_s + "件のお知らせがあります" %><br>
+      </span>  
+      <% end %>
+      
+      <% if @monthly_request_number > 0 %>
+        <%= link_to "所属長承認申請のお知らせ", month_request_approval_user_attendance_path(@user), remote: true %>
+      <span class="request-number" >
+        <%= @monthly_request_number.to_s + "件のお知らせがあります" %>
+      </span>
+      <% end %>
+      
+      <% if @over_approval_number > 0 %>
+        <%= link_to "残業申請のお知らせ",  edit_overwork_request_approval_user_path, remote: true %>
+      <span class="request-number" >
+        <%= @over_approval_number.to_s + "件のお知らせがあります" %>
+      </span>
+      <% end %>
+      
     <% end %>
   </div>
 </div>

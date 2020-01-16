@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200110082631) do
+ActiveRecord::Schema.define(version: 20200116080254) do
 
   create_table "attendances", force: :cascade do |t|
     t.date "worked_on"
@@ -30,6 +30,10 @@ ActiveRecord::Schema.define(version: 20200110082631) do
     t.integer "monthly_enum", default: 1
     t.boolean "monthly_request_change"
     t.integer "change_attendance_id"
+    t.datetime "edit_started_at"
+    t.datetime "edit_finished_at"
+    t.integer "change_at_enum", default: 1
+    t.boolean "change_at_change"
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
