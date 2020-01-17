@@ -96,13 +96,25 @@
               <%= link_to "#{btn_text}登録", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-attendance" if current_user?(@user) %>
             <% end %>
           </td>
-          <td><%= l(day.started_at, format: :hour) if day.started_at.present? %>
-              <%= colon if day.started_at.present? %>
-              <%= l(day.started_at.floor_to(15.minutes), format: :min) if day.started_at.present? %>
+          <td><% if day.started_at.present? && day.edit_started_at.nil? %>
+                <%= l(day.started_at, format: :hour)  %>
+                <%= colon if day.started_at.present? %>
+                <%= l(day.started_at.floor_to(15.minutes), format: :min) if day.started_at.present? %>
+              <% elsif  day.edit_started_at.present? %>
+                <%= l(day.edit_started_at, format: :hour)  %>
+                <%= colon if day.edit_started_at.present? %>
+                <%= l(day.edit_started_at.floor_to(15.minutes), format: :min) if day.edit_started_at.present? %>
+              <% end %>
           </td>
-          <td><%= l(day.finished_at, format: :hour) if day.finished_at.present? %>
-              <%= colon if day.finished_at.present? %>
-              <%= l(day.finished_at.floor_to(15.minutes), format: :min) if day.finished_at.present? %>
+          <td><% if day.finished_at.present? && day.edit_finished_at.nil? %>
+                <%= l(day.finished_at, format: :hour) %>
+                <%= colon if day.finished_at.present? %>
+                <%= l(day.finished_at.floor_to(15.minutes), format: :min) if day.finished_at.present? %>
+              <% elsif day.finished_at.present? && day.edit_finished_at.present?%>
+                <%= l(day.edit_finished_at, format: :hour) %>
+                <%= colon if day.edit_finished_at.present? %>
+                <%= l(day.edit_finished_at.floor_to(15.minutes), format: :min) if day.edit_finished_at.present? %>
+              <% end %>
           </td>    
           <td>
             <% if day.started_at.present? && day.finished_at.present? %>

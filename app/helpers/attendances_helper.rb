@@ -15,6 +15,6 @@ module AttendancesHelper
     format("%.2f", (((over.floor_to(15.minutes)-finish.floor_to(15.minutes)) / 60)) / 60.0)
   end
   
-  
+ 
   
 end

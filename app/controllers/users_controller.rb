@@ -15,6 +15,7 @@ class UsersController < ApplicationController
     @monthly_request_number = Attendance.where(month_superior_id: @user.id).where(monthly_enum: 1).size
     @change_attendance_number =  Attendance.where(change_attendance_id: @user.id).where(change_at_enum: 1).size
     @at =  @attendances.first
+    
   end
 
   def new
