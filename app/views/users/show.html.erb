@@ -117,9 +117,12 @@
               <% end %>
           </td>    
           <td>
-            <% if day.started_at.present? && day.finished_at.present? %>
-              <%= str_times = working_times(day.started_at, day.finished_at) %>
+            <% unless day.edit_started_at.present? && day.edit_finished_at.present? %>
+              <%= str_times = working_times(day.started_at, day.finished_at) if day.started_at.present? && day.finished_at.present?%>
               <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
+            <% else %>  
+              <%= edit_str_times = working_times(day.edit_started_at, day.edit_finished_at) %>
+              <% @total_edit_working_times = @total_edit_working_times.to_f + edit_str_times.to_f %>
             <% end %>
           </td>
           <td><%= day.note %></td>
@@ -127,6 +130,7 @@
           <td><%= sum_overworks = over_working_times(day.overwork_time, day.finished_at) if day.overwork_time.present? && day.finished_at.present? %></td>
           <td><%= day.overwork_note if day.overwork_note.present? %></td>
           <td><%= approval_result(day) if day.overwork_superior_id.present? %>
+              <%= change_at_req_result(day) if day.change_attendance_id.present? %>
           </td>
         </tr>
       <% end %>
@@ -135,8 +139,8 @@
     <tfoot>
       <!--rowspan:縦結合、colspan：横結合-->
       <tr>
-        <td colspan="6">総合勤務時間</td>
-        <td colspan="2">在社時間合計</td>
+        <td colspan="6"></td>
+       <td colspan="2"><%= @total = @total_working_times + @total_edit_working_times %></td>
         <td colspan="5">
           <% if @at.monthly_enum == "承認"%>
             所属長承認済
@@ -154,11 +158,6 @@
             <% end %>
             <% end %>
         </td>
-      </tr>
-      <tr>
-        <td colspan="2"><%= @attendances.count %></td>
-        <td colspan="2"><%= format_basic_info(@user.work_time).to_f * @worked_sum %></td>
-        <td colspan="2"><%= format("%.2f", @total_working_times.to_f) %></td>
       </tr>
     </tfoot>
   </table>

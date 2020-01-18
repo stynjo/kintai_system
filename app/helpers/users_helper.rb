@@ -19,4 +19,14 @@ module UsersHelper
     end 
   end
   
+   def change_at_req_result(result)
+    if result.change_at_enum == '申請中' || result.change_at_enum == 'なし' || result.change_at_enum.nil?
+      return  User.find_by(id: result.change_attendance_id).name + "に勤怠変更申請中" 
+    elsif result.change_at_enum == '承認' 
+      return "勤怠承認済" 
+    elsif result.change_at_enum == '否認' 
+     return "勤怠変更申請が否認されました。" 
+    end 
+  end
+  
 end
