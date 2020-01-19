@@ -47,6 +47,7 @@
 
 <div class="btn-users-show">
   <% if current_user?(@user) %>
+  <%= link_to "勤怠修正ログ(承認済)", attendances_attendance_log_user_path(current_user), remote: true, class: "btn btn-info" %>
   <%= link_to "⇦ 前月へ", user_path(date: @first_day.prev_month), class: "btn btn-info" %>
   <%= link_to "1ヶ月の勤怠編集へ", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-success" %>
   <%= link_to "次月へ ⇨", user_path(date: @first_day.next_month), class: "btn btn-info" %>
@@ -166,3 +167,4 @@
 <div id="month_request_approval" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 <div id="edit_overwork_request_approval" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 <div id="change_attendance_month" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id="attendance_log" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

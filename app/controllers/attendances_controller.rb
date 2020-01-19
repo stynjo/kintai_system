@@ -1,5 +1,5 @@
 class AttendancesController < ApplicationController
-  before_action :set_user, only: [:edit_one_month, :update_one_month, :month_request_approval]
+  before_action :set_user, only: [:edit_one_month, :update_one_month, :month_request_approval, :attendance_log]
   before_action :logged_in_user, only: [:update, :edit_one_month]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
   before_action :set_one_month, only: :edit_one_month
@@ -132,6 +132,11 @@ class AttendancesController < ApplicationController
     end
     flash[:success] = "勤怠変更申請を更新しました。"
     redirect_to @user
+  end
+
+  #勤怠修正ログ
+  def attendance_log
+    @change_log = @user.attendances.where(change_at_change: true)
   end
 
   private

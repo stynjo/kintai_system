@@ -1,0 +1,33 @@
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">勤怠ログ</h3>
+    </div>
+    <div class="modal-body">
+       <% @change_log.each do |at| %>
+          <table class="table-bordered table-condensed">
+            <thead>
+              <tr>
+                <th rowspan ="2">日付</th>
+                <th rowspan ="2">変更前出社時間</th>
+                <th colspan = "2">変更前退社時間</th>
+                <th colspan = "2">変更後出社時間</th>
+                <th rowspan ="2">変更後退社時間</th>
+                <th rowspan ="2">指示者</th>
+                <th rowspan ="2">承認日</th>
+              </tr>
+            </thead>
+              <tbody>
+                <td><%= l(at.worked_on, format: :short) %></td>
+                <td><%= %></td>
+                <td><%= %></td>
+                <td><%= %></td>
+                <td><%= %></td>
+                <td><%= %></td>
+                <td></td>
+              </tbody>
+          </table>
+      <% end %>
+    </div>
+  </div>
+</div>
