@@ -1,0 +1,43 @@
+<h1>勤怠ログ</h1>
+<div class="row">
+  <div class="col-md-10 col-md-offset-1">
+    <%= form_with(url: attendances_attendance_log_user_path, method: :get) do |f| %>
+       <%= f.select :year,options_for_select(["", "2018", "2019", "2020", "2021", "2022"]) %>年
+       <%= f.select :month,options_for_select(["", "1", "2", "3", "4", "5","6", "7", "8", "9", "10","11","12"]), {}, :onchange => 'this.form.submit()' %>月
+    <% end %>
+       <% @change_log.each do |at| %>
+          <table class="table table-bordered" id="table-attendances">
+            <thead>
+              <tr>
+                <th>日付</th>
+                <th>変更前出社時間</th>
+                <th>変更前退社時間</th>
+                <th>変更後出社時間</th>
+                <th>変更後退社時間</th>
+                <th>指示者</th>
+                <th>承認日</th>
+              </tr>
+            </thead>
+              <tbody>
+                <td><%= l(at.worked_on, format: :short) %></td>
+                <td><%= l(at.started_at, format: :hour) if at.started_at.present? %>
+                    <%= colon if at.started_at.present? %>
+                    <%= l(at.started_at.floor_to(15.minutes), format: :min) if at.started_at.present? %></td>
+                <td><%= l(at.finished_at, format: :hour) if at.finished_at.present? %>
+                    <%= colon if at.finished_at.present? %>
+                    <%= l(at.finished_at.floor_to(15.minutes), format: :min) if at.finished_at.present? %></td>
+                <td><%= l(at.edit_started_at, format: :hour) if at.edit_started_at.present? %>
+                    <%= colon if at.edit_started_at.present? %>
+                    <%= l(at.edit_started_at.floor_to(15.minutes), format: :min) if at.edit_started_at.present? %></td>
+                <td><%= l(at.edit_finished_at, format: :hour) if at.edit_finished_at.present? %>
+                    <%= colon if at.edit_finished_at.present? %>
+                    <%= l(at.edit_finished_at.floor_to(15.minutes), format: :min) if at.edit_finished_at.present? %></td>
+                <td><% req_user = at.change_attendance_id %>
+                    <% user = User.find(req_user) %>
+                    <%= user.name %></td>
+                <td><%= at.date_of_approvement.strftime("%Y-%m-%d") %></td></td>
+              </tbody>
+          </table>
+      <% end %>
+  </div>
+</div>

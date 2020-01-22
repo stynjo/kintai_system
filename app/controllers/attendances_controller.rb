@@ -2,7 +2,7 @@ class AttendancesController < ApplicationController
   before_action :set_user, only: [:edit_one_month, :update_one_month, :month_request_approval, :attendance_log]
   before_action :logged_in_user, only: [:update, :edit_one_month]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
-  before_action :set_one_month, only: :edit_one_month
+  before_action :set_one_month, only: [:edit_one_month, :attendance_log]
 
   UPDATE_ERROR_MSG = "勤怠登録に失敗しました。やり直してください。"
   
@@ -128,6 +128,7 @@ class AttendancesController < ApplicationController
     @user = current_user
     change_at_approval_params.each do |id, monthly|
       approval = Attendance.find(id)
+      approval.date_of_approvement = DateTime.current
       approval.update_attributes(monthly)
     end
     flash[:success] = "勤怠変更申請を更新しました。"
@@ -136,7 +137,14 @@ class AttendancesController < ApplicationController
 
   #勤怠修正ログ
   def attendance_log
-    @change_log = @user.attendances.where(change_at_change: true)
+    @change_log = @attendances.where(change_at_change: true)
+    @year = params[:year].to_i
+    @month = params[:month].to_i
+    select_att = "#{@year}-#{@month}-1"
+    if params[:year].present? && params[:month].present?
+      @attendances = Attendance.where(worked_on: select_att.in_time_zone.all_month)
+      @change_log = @attendances.where(change_at_change: true)
+    end
   end
 
   private
