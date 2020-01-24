@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   post   '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
   
+  get '/working_user', to: 'users#working_user'
+  
   #勤怠変更のお知らせ
   get '/change_attendance', to: 'attendances#change_attendance_month'
 

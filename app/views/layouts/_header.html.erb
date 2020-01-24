@@ -6,6 +6,7 @@
         <li><%= link_to "ホーム", root_path %></li>
         <% if logged_in? && current_user.admin? %>
           <li><%= link_to "全てのユーザー", users_path %></li>
+          <li><%= link_to "出勤社員一覧",  working_user_path %></li>
           <li><%= link_to "拠点情報", bases_path %></li>
         <% end %>
         

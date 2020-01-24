@@ -22,7 +22,11 @@ class UsersController < ApplicationController
       end
     end
   end
-
+  
+  def working_user
+    @users = User.all.includes(:attendances)
+  end
+  
   def new
     @user = User.new
   end
