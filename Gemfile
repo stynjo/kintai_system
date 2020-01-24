@@ -17,6 +17,7 @@ gem 'jbuilder',     '~> 2.5'
 gem 'rounding'
 gem 'hirb'
 gem 'pry-rails'
+gem 'roo'
 
 group :development, :test do
   gem 'sqlite3'

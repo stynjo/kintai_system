@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   get '/change_attendance', to: 'attendances#change_attendance_month'
 
   resources :users do
+    collection {post :import}
     member do
       get 'edit_basic_info'
       patch 'update_basic_info'

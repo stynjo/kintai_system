@@ -1,4 +1,7 @@
 class User < ApplicationRecord
+  
+  require 'csv'
+  
   has_many :attendances, dependent: :destroy
   # 「remember_token」という仮想の属性を作成します。
   attr_accessor :remember_token
@@ -13,8 +16,7 @@ class User < ApplicationRecord
                     format: { with: VALID_EMAIL_REGEX },
                     uniqueness: true
   validates :affiliation, length: { in: 2..50 }, allow_blank: true
-  validates :basic_time, presence: true
-  validates :work_time, presence: true
+  validates :basic_work_time, presence: true
   validates :employee_number, presence: true
   validates :uid, presence: true
   has_secure_password
@@ -60,6 +62,22 @@ class User < ApplicationRecord
   
   def self.search(search)
       User.where(['name LIKE ?', "%#{search}%"])
+  end
+  
+  def self.import(file)
+    CSV.foreach(file.path, headers: true) do |row|
+      # IDが見つかれば、レコードを呼び出し、見つかれなければ、新しく作成
+      user = find_by(name: row["name"]) || new
+      # CSVからデータを取得し、設定する
+      user.attributes = row.to_hash.slice(*updatable_attributes)
+      user.save
+    end
+  end
+
+  # 更新を許可するカラムを定義
+  def self.updatable_attributes
+    ["name", "email", "affiliation", "employee_number", "uid", "basic_work_time", 
+    "designated_work_start_time","designated_work_end_time", "superior", "admin", "password"]
   end
     
 end

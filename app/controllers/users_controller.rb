@@ -15,7 +15,12 @@ class UsersController < ApplicationController
     @monthly_request_number = Attendance.where(month_superior_id: @user.id).where(monthly_enum: 1).size
     @change_attendance_number =  Attendance.where(change_attendance_id: @user.id).where(change_at_enum: 1).size
     @at =  @attendances.first
-    
+    respond_to do |format|
+      format.html
+      format.csv do
+        send_data render_to_string, filename: "#{@user.name}の勤怠情報.csv", type: :csv
+      end
+    end
   end
 
   def new
@@ -49,6 +54,18 @@ class UsersController < ApplicationController
     @user.destroy
     flash[:success] = "#{@user.name}のデータを削除しました。"
     redirect_to users_url
+  end
+
+  def import
+    # fileはtmpに自動で一時保存される
+    if params[:file] == nil
+      flash[:danger] = "インポートするCSVファイルを選択してください。"
+      redirect_to users_url
+    else
+      User.import(params[:file])
+      flash[:success] = "CSVインポートによるユーザー登録が完了しました。"
+      redirect_to users_url
+    end
   end
 
   def edit_basic_info
@@ -97,7 +114,7 @@ class UsersController < ApplicationController
     end
 
     def basic_info_params
-      params.require(:user).permit(:affiliation, :basic_time, :work_time)
+      params.require(:user).permit(:affiliation, :basic_work_time)
     end
     
     
