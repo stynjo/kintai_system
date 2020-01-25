@@ -52,6 +52,11 @@ class ApplicationController < ActionController::Base
     redirect_to root_url
   end
   
- 
+ def admin_access_ban
+   if current_user.admin?
+     flash[:danger] = "管理者はアクセスできません"
+     redirect_to root_url
+   end
+ end
   
 end

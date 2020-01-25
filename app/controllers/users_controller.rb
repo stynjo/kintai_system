@@ -1,9 +1,10 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy, :edit_basic_info]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :update_basic_info, :edit_basic_info]
   before_action :logged_in_user, only: [:index, :edit, :update, :destroy, :edit_basic_info, :update_basic_info]
   before_action :correct_user, only: [:edit, :update,:show]
   before_action :admin_user, only: [:destroy, :edit_basic_info, :update_basic_info, :index]
   before_action :set_one_month, only: :show
+  before_action :admin_access_ban, only: :show
 
   def index
     @users = User.paginate(page: params[:page])
@@ -118,7 +119,10 @@ class UsersController < ApplicationController
     end
 
     def basic_info_params
-      params.require(:user).permit(:affiliation, :basic_work_time)
+      params.require(:user).permit(:name, :email, :affiliation, :employee_number, :uid,
+                                   :basic_work_time,
+                                   :designated_work_start_time, :designated_work_end_time,
+                                   :password, :password_confirmation)
     end
     
     
