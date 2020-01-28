@@ -37,10 +37,10 @@ class AttendancesController < ApplicationController
       ActiveRecord::Base.transaction do # トランザクション開始
 
         attendances_params.each do |id, item|
-          if item['edit_started_at'].present? && item['edit_finished_at'].present? && item['change_attendance_id'].present?
+          if item['edit_started_at'].present? && item['edit_finished_at'].present? && item['change_attendance_id'].present? && item['edit_started_at'] < item['edit_finished_at']
             attendance = Attendance.find(id)
             attendance.update_attributes!(item)
-          elsif item['edit_started_at'].empty? && item['edit_finished_at'].empty? && item['change_attendance_id'].empty?
+          elsif item['edit_started_at'].empty? && item['edit_finished_at'].empty? && item['change_attendance_id'].empty? 
             attendance = Attendance.find(id)
             attendance.update_attributes!(item)
           else
@@ -76,7 +76,14 @@ class AttendancesController < ApplicationController
   def update_overwork_request
     @user = current_user
     @attendance = @user.attendances.find(params[:id])
+    @attendance.redesignated_endtime = @user.designated_work_end_time.change(year: @attendance.worked_on.year,
+                                                                               month: @attendance.worked_on.month,
+                                                                               day: @attendance.worked_on.day)
     if @attendance.update_attributes(overwork_params)
+      @attendance.overwork_time = @attendance.overwork_time.change(year: @attendance.worked_on.year,
+                                                                                   month: @attendance.worked_on.month,
+                                                                                   day: @attendance.worked_on.day)
+       @attendance.save 
       flash[:success] = "残業申請しました。"
       redirect_to @user
     else
@@ -112,7 +119,7 @@ class AttendancesController < ApplicationController
       approval = Attendance.find(id)
       approval.update_attributes(monthly)
     end
-    flash[:success] = "所属長承認申請を更新しました。"
+    flash[:success] = "所属長承認申請を更新しました。（更新は変更欄にチェックの入っている申請にのみ適用されます。）"
     redirect_to @user
   end
   
@@ -155,7 +162,7 @@ class AttendancesController < ApplicationController
     end
     
     def overwork_params
-      params.require(:attendance).permit(:overwork_time, :overwork_note, :overwork_tomorrow, :overwork_superior_id, :overwork_enum)
+      params.require(:attendance).permit(:overwork_time, :overwork_note, :overwork_tomorrow, :overwork_superior_id, :overwork_enum, :redesignated_endtime)
     end
     
     def update_month_request_params

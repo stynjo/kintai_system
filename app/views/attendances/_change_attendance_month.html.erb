@@ -7,7 +7,7 @@
       <%= form_with(model: @users, url: attendances_update_change_attendance_month_user_path(@users, @request_su), local: true, method: :patch) do |f| %>
         <% @users.each do |user| %>
           <h4><%= "【#{user.name}からの１ヶ月分の勤怠申請】" %></h4>
-          <table class="table-bordered table-condensed">
+          <table class="table table-bordered" id="table-attendances">
             <thead>
               <tr>
                 <th rowspan ="2">日付</th>

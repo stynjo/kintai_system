@@ -1,12 +1,14 @@
-<div class ="modal-dialog">
+<div class="modal-dialog modal-lg modal-dialog-center">
   <div class="modal-content">
     <div class="modal-header">
-        <h5 class="modal-title">残業申請</h5>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <h1 class="modal-title">残業申請</h1>
     </div>
     <div class="modal-body">
        <%= form_with(model: @attendance, url: update_overwork_request_user_attendance_path(@attendance), local: true, method: :patch) do |f| %>
-         <table>
+         <table class="table table-bordered" id="table-attendances">
            <thead>
              <tr>
                <th>日付</th> 
@@ -23,14 +25,13 @@
                <td><%= f.time_field :overwork_time %></td>
                <td><%= f.check_box :overwork_tomorrow, {}, "true", "false" %></td>
                <td><%= f.text_field :overwork_note %></td>
-               <td><%= f.collection_select :overwork_superior_id, User.where(superior: true), :id, :name %></td>
+               <td><%= f.collection_select :overwork_superior_id, User.where.not(id: current_user.id).where.not(superior: false), :id, :name %></td>
              </tbody>
          </table>
            <%= f.hidden_field :overwork_enum, {value: "申請中"} %> 
          <%= f.submit "残業申請する", class: "btn btn-primary" %>
       <% end %> 
     </div>
-      <div class="modal-footer">
-      </div>
+    </div>
   </div>
 </div>

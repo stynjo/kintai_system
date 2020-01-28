@@ -32,7 +32,10 @@
                       <td><%= %w{日 月 火 水 木 金 土}[at.worked_on.wday] %></td>
                       <td><%= format_basic_info(user.designated_work_end_time) %></td>
                       <td><%= at.overwork_time.to_s(:time)  if at.overwork_time.present? %></td>
-                      <td><%= sum_overworks = over_working_times(at.overwork_time, at.finished_at) if at.overwork_time.present? && at.finished_at.present? %></td>
+                      <td><% if at.overwork_time.present? && at.redesignated_endtime.present? %>
+                            <%= sum_overworks = over_working_times(at.overwork_time, at.redesignated_endtime) %>
+                          <% end %>
+                        </td>
                       <td><%= at.overwork_note %></td>
                       <td><%= af.select :overwork_enum, Attendance.overwork_enums.keys %></td>
                       <td><%= af.check_box :overwork_request_change, {}, "true", "false" %></td>

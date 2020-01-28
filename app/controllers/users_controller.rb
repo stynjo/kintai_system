@@ -7,7 +7,7 @@ class UsersController < ApplicationController
   before_action :admin_access_ban, only: :show
 
   def index
-    @users = User.paginate(page: params[:page])
+    @users = User.paginate(page: params[:page]).where.not(id: 1)
   end
 
   def show
@@ -103,7 +103,7 @@ class UsersController < ApplicationController
         attendance.update_attributes!(approval)
       end
    end
-   flash[:success] = "残業申請を更新しました。"
+   flash[:success] = "残業申請を更新しました。（更新は変更欄にチェックの入っている申請にのみ適用されます。）"
    redirect_to user_url
    rescue ActiveRecord::RecordInvalid
    flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"

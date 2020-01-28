@@ -19,6 +19,7 @@ ja:
           updated_at: 更新日
           designated_work_start_time: 指定勤務開始時間
           designated_work_end_time: 指定勤務終了時間
+          basic_work_time: 基本時間
         attendance:
           worked_on: 日付
           started_at: 出勤時間

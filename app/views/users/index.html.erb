@@ -26,11 +26,7 @@
     <% @users.each do |user| %>
       <tr>
         <td>
-          <% if current_user.admin? %>
-            <%= link_to user.name, user %>
-          <% else %>
             <%= user.name %>
-          <% end %>
         </td>
         <td class="center">
           <% if current_user.admin? && !current_user?(user) %>

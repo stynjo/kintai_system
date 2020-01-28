@@ -12,10 +12,10 @@
   <tbody> 
     <% @bases.each do |base| %>
      <tr>
-       <th><%= link_to "編集", edit_basis_path(base) %></th>
+       <th><%= link_to "編集", edit_basis_path(base), class: "btn btn-primary btn-attendance"%></th>
        <th><%= link_to "削除", base, method: :delete,
                 data: { confirm: "削除してよろしいですか？" },
-                class: "btn btn-danger" %>
+                class: "btn btn-primary btn-attendance" %>
        </th>
        <th><%= base.number %></th>
        <th><%= base.name %></th>
@@ -25,4 +25,4 @@
   </tbody>
 </table>
 
-<%= link_to "拠点情報追加", new_basis_path %>
+<%= link_to "拠点情報追加", new_basis_path, class: "btn btn-primary btn-attendance" %>

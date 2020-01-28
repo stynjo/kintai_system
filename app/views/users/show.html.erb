@@ -2,10 +2,12 @@
 <div>
   <table class="table table-bordered table-condensed user-table">
     <tr>
+      <% if @user == current_user %>
       <td> <%= link_to "⇦ ", user_path(date: @first_day.prev_month), class: "btn btn-primary btn-attendance" %>
       【<%= l(@first_day, format: :middle) %>】勤怠管理表
       <%= link_to " ⇨", user_path(date: @first_day.next_month),class: "btn btn-primary btn-attendance" %>
       </td>
+      <% end %>
       <td>指定勤務開始時間：<%= format_basic_info(@user.designated_work_start_time) %><br>
           指定勤務終了時間：<%= format_basic_info(@user.designated_work_end_time) %></td>
       <td colspan ="3">基本時間：<%= format_basic_info(@user.basic_work_time) %></td>
@@ -34,7 +36,7 @@
       <% if @monthly_request_number > 0 %>
         <%= link_to "所属長承認申請のお知らせ", month_request_approval_user_attendance_path(@user), remote: true %>
       <span class="request-number" >
-        <%= @monthly_request_number.to_s + "件のお知らせがあります" %>
+        <%= @monthly_request_number.to_s + "件のお知らせがあります" %><br>
       </span>
       <% end %>
       
@@ -132,12 +134,17 @@
           </td>
           <td><%= day.note %></td>
           <td><%= l(day.overwork_time, format: :time) if day.overwork_time.present?%></td>
-          <td><%= sum_overworks = over_working_times(day.overwork_time, day.finished_at) if day.overwork_time.present? && day.finished_at.present? %></td>
+          <td>
+            <% if day.overwork_time.present?  && day.redesignated_endtime.present? %>
+              <%= sum_overworks = over_working_times(day.overwork_time, day.redesignated_endtime) %>
+            <% end %>
+          </td>
           <td><%= day.overwork_note if day.overwork_note.present? %></td>
-          <td><%= approval_result(day) if day.overwork_superior_id.present? %>
+          <td><%= approval_result(day) if day.overwork_superior_id.present? %><br>
               <%= change_at_req_result(day) if day.change_attendance_id.present? %>
           </td>
         </tr>
+        
       <% end %>
     </tbody>
 
@@ -157,7 +164,7 @@
           
             <%= form_with(model: @at, url: attendances_update_month_request_user_path(@user, params: {date: @first_day}), local: true, method: :patch) do |f| %>
             <% if @user == current_user %>
-              <%= f.collection_select :month_superior_id, User.where.not(id: current_user.id).where.not(superior: false), :id, :name %>
+              <%= f.collection_select :month_superior_id, User.where.not(id: current_user.id).where.not(superior: false), :id, :name, :include_blank => true %>
                <%= f.hidden_field :monthly_enum, {value: "申請中"} %>
                <%= f.submit "申請", class: "btn btn-primary" %>
             <% end %>
