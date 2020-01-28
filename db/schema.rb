@@ -62,7 +62,6 @@ ActiveRecord::Schema.define(version: 20200128034041) do
     t.string "uid"
     t.integer "employee_number"
     t.datetime "basic_work_time", default: "2020-01-27 23:00:00"
-    t.datetime "basic_time"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
