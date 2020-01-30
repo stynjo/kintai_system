@@ -40,6 +40,16 @@ class AttendancesController < ApplicationController
           if item['edit_started_at'].present? && item['edit_finished_at'].present? && item['change_attendance_id'].present? && item['edit_started_at'] < item['edit_finished_at']
             attendance = Attendance.find(id)
             attendance.update_attributes!(item)
+          elsif  item['edit_started_at'].present? && item['edit_finished_at'].present? && item['change_attendance_id'].present? && item['edit_started_at'] > item['edit_finished_at'] 
+            attendance = Attendance.find(id)
+            attendance.update_attributes!(item) 
+              if attendance.edit_one_month_tomorrow == true
+                attendance.edit_finished_at = attendance.edit_finished_at.tomorrow
+                 attendance.save
+              elsif attendance.edit_one_month_tomorrow == false 
+                 success = false
+                 break
+              end
           elsif item['edit_started_at'].empty? && item['edit_finished_at'].empty? && item['change_attendance_id'].empty? 
             attendance = Attendance.find(id)
             attendance.update_attributes!(item)
@@ -77,12 +87,15 @@ class AttendancesController < ApplicationController
     @user = current_user
     @attendance = @user.attendances.find(params[:id])
     @attendance.redesignated_endtime = @user.designated_work_end_time.change(year: @attendance.worked_on.year,
-                                                                               month: @attendance.worked_on.month,
-                                                                               day: @attendance.worked_on.day)
+                                                                             month: @attendance.worked_on.month,
+                                                                             day: @attendance.worked_on.day)
     if @attendance.update_attributes(overwork_params)
       @attendance.overwork_time = @attendance.overwork_time.change(year: @attendance.worked_on.year,
-                                                                                   month: @attendance.worked_on.month,
-                                                                                   day: @attendance.worked_on.day)
+                                                                   month: @attendance.worked_on.month,
+                                                                   day: @attendance.worked_on.day)
+      if @attendance.overwork_tomorrow == true
+        @attendance.overwork_time = @attendance.overwork_time.tomorrow  
+      end
        @attendance.save 
       flash[:success] = "残業申請しました。"
       redirect_to @user
@@ -158,7 +171,7 @@ class AttendancesController < ApplicationController
 
     # 1ヶ月分の勤怠情報を扱います。
     def attendances_params
-      params.require(:user).permit(attendances: [:edit_started_at, :edit_finished_at, :note, :change_attendance_id, :change_at_enum])[:attendances]
+      params.require(:user).permit(attendances: [:edit_started_at, :edit_finished_at, :note, :change_attendance_id, :change_at_enum, :edit_one_month_tomorrow])[:attendances]
     end
     
     def overwork_params
