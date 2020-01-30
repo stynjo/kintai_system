@@ -44,6 +44,7 @@ class UsersController < ApplicationController
   end
 
   def edit
+    admin_access_ban
   end
 
   def update
@@ -98,19 +99,20 @@ class UsersController < ApplicationController
   
   
   def update_overwork_request_approval
-    ActiveRecord::Base.transaction do 
-      overwork_request_approval_params.each do |id, approval|
-        attendance = Attendance.find(id)
-        attendance.update_attributes!(approval)
+     @user = current_user
+    overwork_request_approval_params.each do |id, approval|
+      over = Attendance.find(id)
+      n = over.id.to_s
+      @k= params[:attendances][n][:overwork_request_change]
+      if  @k == "true"
+        over.update_attributes!(approval)
+         flash[:success] = "残業申請を更新しました。"
+      else
+         flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
       end
-   end
-   flash[:success] = "残業申請を更新しました。（更新は変更欄にチェックの入っている申請にのみ適用されます。）"
-   redirect_to user_url
-   rescue ActiveRecord::RecordInvalid
-   flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
-   redirect_to root_url
+    end
+      redirect_to @user
   end
-  
   
   
   private

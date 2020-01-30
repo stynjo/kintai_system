@@ -29,6 +29,7 @@ class AttendancesController < ApplicationController
   end
 
   def edit_one_month
+    admin_access_ban
   end
   
   def update_one_month
@@ -130,10 +131,16 @@ class AttendancesController < ApplicationController
     @user = current_user
     monthly_request_approval_params.each do |id, monthly|
       approval = Attendance.find(id)
-      approval.update_attributes(monthly)
+      n = approval.id.to_s
+      @k= params[:attendances][n][:monthly_request_change]  
+      if  @k == "true"
+        approval.update_attributes!(monthly)
+         flash[:success] = "所属長承認申請を更新しました"
+       else
+         flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
+      end
     end
-    flash[:success] = "所属長承認申請を更新しました。（更新は変更欄にチェックの入っている申請にのみ適用されます。）"
-    redirect_to @user
+      redirect_to @user
   end
   
   #勤怠変更のおしらせ
@@ -149,10 +156,16 @@ class AttendancesController < ApplicationController
     change_at_approval_params.each do |id, monthly|
       approval = Attendance.find(id)
       approval.date_of_approvement = DateTime.current
-      approval.update_attributes(monthly)
+      n = approval.id.to_s
+      @k= params[:attendances][n][:change_at_change]  
+      if  @k == "true"
+        approval.update_attributes(monthly)
+        flash[:success] = "勤怠変更申請を更新しました。"
+    else
+         flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
+      end
     end
-    flash[:success] = "勤怠変更申請を更新しました。"
-    redirect_to @user
+      redirect_to @user
   end
 
   #勤怠修正ログ

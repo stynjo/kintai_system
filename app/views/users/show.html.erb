@@ -31,13 +31,19 @@
       <span class="request-number" >
         <%= @change_attendance_number.to_s + "件のお知らせがあります" %><br>
       </span>  
+      <% else  %>
+        <div>【勤怠変更申請のお知らせ】</div>
       <% end %>
+      
+      
       
       <% if @monthly_request_number > 0 %>
         <%= link_to "所属長承認申請のお知らせ", month_request_approval_user_attendance_path(@user), remote: true %>
       <span class="request-number" >
         <%= @monthly_request_number.to_s + "件のお知らせがあります" %><br>
       </span>
+      <% else  %>
+        <div>【所属長承認申請のお知らせ】</div>
       <% end %>
       
       <% if @over_approval_number > 0 %>
@@ -45,6 +51,8 @@
       <span class="request-number" >
         <%= @over_approval_number.to_s + "件のお知らせがあります" %>
       </span>
+      <% else  %>
+        <div>【残業申請のお知らせ】</div>
       <% end %>
       
     <% end %>
@@ -56,7 +64,7 @@
   <% if current_user?(@user) %>
     <%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary btn-attendance" %>
     <%= link_to "CSV出力", user_path(@user, date: @first_day, format: :csv), class: "btn btn-primary btn-attendance"%><br>
-    <%= link_to "勤怠修正ログ(承認済)", attendances_attendance_log_user_path(current_user), class: "btn btn-primary btn-attendance"%>
+    <%= link_to "勤怠修正ログ(承認済)", attendances_attendance_log_user_path(current_user), class: "btn btn-primary btn-attendance" %>
   <% end %>
 </div>
 
@@ -178,3 +186,4 @@
 <div id="month_request_approval" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 <div id="edit_overwork_request_approval" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 <div id="change_attendance_month" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id="attendance_log" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

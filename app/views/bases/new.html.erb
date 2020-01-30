@@ -1,4 +1,17 @@
 <% provide(:button_text, '拠点地追加') %>
 <h1>拠点地</h1>
 
-<%= render 'b_form' %>
+<%= form_with(model: @base, local: true) do |f| %>
+
+  <%= f.label :拠点地番号, class: "form-edit-label" %>
+  <%= f.text_field :number, class: "form-control" %>
+  
+  <%= f.label :拠点地, class: "form-edit-label" %>
+  <%= f.text_field :name, class: "form-control" %>
+  
+  <%= f.label :拠点種類, class: "form-edit-label" %>
+  <%= f.text_field :type, class: "form-control" %>
+
+  <%= f.submit yield(:button_text), class: "btn btn-primary btn-block btn-#{yield(:class_text)}" %>
+<% end %>
+

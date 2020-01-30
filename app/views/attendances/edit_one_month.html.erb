@@ -34,6 +34,8 @@
               <td>
                 <% if day.started_at.present? && day.finished_at.present? %>
                   <%= working_times(day.started_at, day.finished_at) %>
+                <% elsif day.edit_started_at.present? && day.edit_finished_at.present?%>
+                  <%= working_times(day.edit_started_at, day.edit_finished_at) %>
                 <% end %>
               </td>
               <td><%= attendance.text_field :note, class: "form-control" %></td>

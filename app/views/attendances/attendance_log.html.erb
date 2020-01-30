@@ -5,7 +5,6 @@
        <%= f.select :year,options_for_select(["", "2018", "2019", "2020", "2021", "2022"]) %>年
        <%= f.select :month,options_for_select(["", "1", "2", "3", "4", "5","6", "7", "8", "9", "10","11","12"]), {}, :onchange => 'this.form.submit()' %>月
     <% end %>
-       <% @change_log.each do |at| %>
           <table class="table table-bordered" id="table-attendances">
             <thead>
               <tr>
@@ -18,6 +17,7 @@
                 <th>承認日</th>
               </tr>
             </thead>
+             <% @change_log.each do |at| %>
               <tbody>
                 <td><%= l(at.worked_on, format: :short) %></td>
                 <td><%= l(at.started_at, format: :hour) if at.started_at.present? %>
@@ -37,7 +37,7 @@
                     <%= user.name %></td>
                 <td><%= at.date_of_approvement.strftime("%Y-%m-%d") %></td></td>
               </tbody>
+                <% end %>
           </table>
-      <% end %>
   </div>
 </div>
