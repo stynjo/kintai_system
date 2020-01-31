@@ -145,7 +145,7 @@ class AttendancesController < ApplicationController
   
   #勤怠変更のおしらせ
   def change_attendance_month
-    @request_su = Attendance.where(change_attendance_id: current_user)
+    @request_su = Attendance.where(change_attendance_id: current_user).where(change_at_enum: "申請中" )
     user = @request_su.pluck(:user_id)
     @users = User.find(user)
   end
