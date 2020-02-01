@@ -41,6 +41,13 @@ class AttendancesController < ApplicationController
           if item['edit_started_at'].present? && item['edit_finished_at'].present? && item['change_attendance_id'].present? && item['edit_started_at'] < item['edit_finished_at']
             attendance = Attendance.find(id)
             attendance.update_attributes!(item)
+              if attendance.edit_one_month_tomorrow == true
+                attendance.edit_finished_at = attendance.edit_finished_at.tomorrow
+                 attendance.save
+              elsif attendance.edit_one_month_tomorrow == false 
+                 success = false
+                 break
+              end
           elsif  item['edit_started_at'].present? && item['edit_finished_at'].present? && item['change_attendance_id'].present? && item['edit_started_at'] > item['edit_finished_at'] 
             attendance = Attendance.find(id)
             attendance.update_attributes!(item) 
