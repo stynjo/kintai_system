@@ -106,6 +106,8 @@ class UsersController < ApplicationController
       @k= params[:attendances][n][:overwork_request_change]
       if  @k == "true"
         over.update_attributes!(approval)
+         over.overwork_request_change = false
+         over.save
          flash[:success] = "残業申請を更新しました。"
       else
          flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"

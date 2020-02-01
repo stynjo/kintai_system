@@ -167,6 +167,8 @@ class AttendancesController < ApplicationController
       @k= params[:attendances][n][:change_at_change]  
       if  @k == "true"
         approval.update_attributes(monthly)
+        approval.change_at_change = false
+        approval.save
         flash[:success] = "勤怠変更申請を更新しました。"
     else
          flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
