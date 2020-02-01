@@ -111,33 +111,22 @@
               <%= link_to "#{btn_text}登録", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-attendance" if current_user?(@user) %>
             <% end %>
           </td>
-          <td><% if day.started_at.present? && day.edit_started_at.nil? %>
+          <td><% if day.started_at.present? %>
                 <%= l(day.started_at, format: :hour)  %>
                 <%= colon if day.started_at.present? %>
                 <%= l(day.started_at.floor_to(15.minutes), format: :min) if day.started_at.present? %>
-              <% elsif  day.edit_started_at.present? %>
-                <%= l(day.edit_started_at, format: :hour)  %>
-                <%= colon if day.edit_started_at.present? %>
-                <%= l(day.edit_started_at.floor_to(15.minutes), format: :min) if day.edit_started_at.present? %>
               <% end %>
           </td>
-          <td><% if day.finished_at.present? && day.edit_finished_at.nil? %>
+          <td><% if day.finished_at.present?  %>
                 <%= l(day.finished_at, format: :hour) %>
                 <%= colon if day.finished_at.present? %>
                 <%= l(day.finished_at.floor_to(15.minutes), format: :min) if day.finished_at.present? %>
-              <% elsif day.edit_finished_at.present?%>
-                <%= l(day.edit_finished_at, format: :hour) %>
-                <%= colon if day.edit_finished_at.present? %>
-                <%= l(day.edit_finished_at.floor_to(15.minutes), format: :min) if day.edit_finished_at.present? %>
               <% end %>
           </td>    
           <td>
-            <% unless day.edit_started_at.present? && day.edit_finished_at.present? %>
-              <%= str_times = working_times(day.started_at, day.finished_at) if day.started_at.present? && day.finished_at.present?%>
-              <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
-            <% else %>  
+             <% if day.started_at.present? && day.finished_at.present? %>
               <%= edit_str_times = working_times(day.edit_started_at, day.edit_finished_at) %>
-              <% @total_edit_working_times = @total_edit_working_times.to_f + edit_str_times.to_f %>
+              <% @total_working_times = @total_working_times.to_f + edit_str_times.to_f %>
             <% end %>
           </td>
           <td><%= day.note %></td>

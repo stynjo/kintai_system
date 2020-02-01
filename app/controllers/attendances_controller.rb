@@ -44,7 +44,7 @@ class AttendancesController < ApplicationController
               if attendance.edit_one_month_tomorrow == true
                 attendance.edit_finished_at = attendance.edit_finished_at.tomorrow
                  attendance.save
-              elsif attendance.edit_one_month_tomorrow == false 
+              elsif attendance.edit_one_month_tomorrow == false &&  item['edit_started_at'] > item['edit_finished_at'] 
                  success = false
                  break
               end
@@ -166,6 +166,8 @@ class AttendancesController < ApplicationController
       n = approval.id.to_s
       @k= params[:attendances][n][:change_at_change]  
       if  @k == "true"
+        approval.started_at = approval.edit_started_at
+        approval.finished_at = approval.edit_finished_at
         approval.update_attributes(monthly)
         approval.change_at_change = false
         approval.save
@@ -179,7 +181,7 @@ class AttendancesController < ApplicationController
 
   #勤怠修正ログ
   def attendance_log
-    @change_log = @attendances.where(change_at_change: true)
+    @change_log = @attendances.where(user_id: @user.id).where(change_at_enum: "承認")
     @year = params[:year].to_i
     @month = params[:month].to_i
     select_att = "#{@year}-#{@month}-1"
