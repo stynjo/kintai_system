@@ -1,0 +1,21 @@
+AllCops:
+  TargetRubyVersion: 2.6
+  Exclude:
+    - 'db/**/*'
+    - 'config/**/*'
+    - 'script/**/*'
+    - 'test/**/*'
+    - 'spec/**/*'
+    - 'bin/**/*'
+    - 'vendor/**/*'
+    - 'Gemfile'
+
+Style/Documentation:
+  Enabled: false
+
+Layout/LineLength:
+  Max: 160
+
+Style/AsciiComments:
+  Enabled: false
+
