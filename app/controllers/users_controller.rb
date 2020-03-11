@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy, :update_basic_info, :edit_basic_info]
-  before_action :logged_in_user, only: [:index, :edit, :update, :destroy, :edit_basic_info, :update_basic_info]
-  before_action :correct_user, only: [:edit, :update,:show]
-  before_action :admin_user, only: [:destroy, :edit_basic_info, :update_basic_info, :index]
+  before_action :set_user, only: %i[show edit update destroy update_basic_info edit_basic_info]
+  before_action :logged_in_user, only: %i[index edit update destroy edit_basic_info update_basic_info]
+  before_action :correct_user, only: %i[edit update show]
+  before_action :admin_user, only: %i[destroy edit_basic_info update_basic_info index]
   before_action :set_one_month, only: :show
   before_action :admin_access_ban, only: :show
 
@@ -14,8 +16,8 @@ class UsersController < ApplicationController
     @worked_sum = @attendances.where.not(started_at: nil).where.not(edit_started_at: nil).count
     @over_approval_number = Attendance.where(overwork_superior_id: @user.id).where(overwork_enum: 1).size
     @monthly_request_number = Attendance.where(month_superior_id: @user.id).where(monthly_enum: 1).size
-    @change_attendance_number =  Attendance.where(change_attendance_id: @user.id).where(change_at_enum: 1).size
-    @at =  @attendances.first
+    @change_attendance_number = Attendance.where(change_attendance_id: @user.id).where(change_at_enum: 1).size
+    @at = @attendances.first
     respond_to do |format|
       format.html
       format.csv do
@@ -23,11 +25,11 @@ class UsersController < ApplicationController
       end
     end
   end
-  
+
   def working_user
     @users = User.all.includes(:attendances)
   end
-  
+
   def new
     @user = User.new
   end
@@ -49,10 +51,10 @@ class UsersController < ApplicationController
 
   def update
     if @user.update_attributes(user_params)
-      flash[:success] = "ユーザー情報を更新しました。"
+      flash[:success] = 'ユーザー情報を更新しました。'
       redirect_to @user
     else
-      render :edit      
+      render :edit
     end
   end
 
@@ -64,79 +66,73 @@ class UsersController < ApplicationController
 
   def import
     # fileはtmpに自動で一時保存される
-    if params[:file] == nil
-      flash[:danger] = "インポートするCSVファイルを選択してください。"
+    if params[:file].nil?
+      flash[:danger] = 'インポートするCSVファイルを選択してください。'
       redirect_to users_url
     else
       User.import(params[:file])
-      flash[:success] = "CSVインポートによるユーザー登録が完了しました。"
+      flash[:success] = 'CSVインポートによるユーザー登録が完了しました。'
       redirect_to users_url
     end
   end
 
-  def edit_basic_info
-  end
+  def edit_basic_info; end
 
   def update_basic_info
     if @user.update_attributes(basic_info_params)
       flash[:success] = "#{@user.name}の基本情報を更新しました。"
     else
-      flash[:danger] = "#{@user.name}の更新は失敗しました。<br>" + @user.errors.full_messages.join("<br>")
+      flash[:danger] = "#{@user.name}の更新は失敗しました。<br>" + @user.errors.full_messages.join('<br>')
     end
     redirect_to users_url
   end
-  
+
   def search
     @users = User.search(params[:search])
   end
-  
 
   def edit_overwork_request_approval
     @attendances = Attendance.where(overwork_superior_id: current_user.id).where(overwork_enum: 1)
     user = @attendances.pluck(:user_id)
     @users = User.find(user)
-  end 
-  
-  
+  end
+
   def update_overwork_request_approval
-     @user = current_user
+    @user = current_user
     overwork_request_approval_params.each do |id, approval|
       over = Attendance.find(id)
       n = over.id.to_s
-      @k= params[:attendances][n][:overwork_request_change]
-      if  @k == "true"
+      @k = params[:attendances][n][:overwork_request_change]
+      if @k == 'true'
         over.update_attributes!(approval)
-         over.overwork_request_change = false
-         over.save
-         flash[:success] = "残業申請を更新しました。"
+        over.overwork_request_change = false
+        over.save
+        flash[:success] = '残業申請を更新しました。'
       else
-         flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
+        flash[:danger] = '無効な入力データがあった為、更新をキャンセルしました。'
       end
     end
-      redirect_to @user
+    redirect_to @user
   end
-  
-  
+
   private
 
-    def user_params
-      params.require(:user).permit(:name, :email, :affiliation, :password, :password_confirmation, :employee_number, :uid)
-    end
+  def user_params
+    params.require(:user).permit(:name, :email, :affiliation, :password, :password_confirmation, :employee_number, :uid)
+  end
 
-    def basic_info_params
-      params.require(:user).permit(:name, :email, :affiliation, :employee_number, :uid,
-                                   :basic_work_time,
-                                   :designated_work_start_time, :designated_work_end_time,
-                                   :password, :password_confirmation)
-    end
-    
-    
-    def overwork_params
-      params.require(:attendance).permit(:overwork_time, :overwork_note, :overwork_tomorrow, :overwork_superior_id)
-    end
-  
-    def overwork_request_approval_params
-       params.permit(attendances: [:overwork_enum, :overwork_request_change])[:attendances]
-    end
-    
+  def basic_info_params
+    params.require(:user).permit(:name, :email, :affiliation, :employee_number, :uid,
+                                 :basic_work_time,
+                                 :designated_work_start_time, :designated_work_end_time,
+                                 :password, :password_confirmation)
+  end
+
+  def overwork_params
+    params.require(:attendance).permit(:overwork_time, :overwork_note, :overwork_tomorrow, :overwork_superior_id)
+  end
+
+  def overwork_request_approval_params
+    params.permit(attendances: %i[overwork_enum overwork_request_change])[:attendances]
+  end
 end
