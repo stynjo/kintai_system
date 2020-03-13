@@ -31,7 +31,7 @@
             <%= fields_for "attendances[]", at do |af| %>
             <tbody>
               <td><%=  l(at.worked_on, format: :short) %></td>
-              <td><%= $days_of_the_week[at.worked_on.wday] %></td>
+              <td><%= days_of_the_week[at.worked_on.wday] %></td>
               <td><%= l(at.started_at, format: :hour) if at.started_at.present? %>
                 <%= colon if at.started_at.present? %>
                 <%= l(at.started_at.floor_to(15.minutes), format: :min) if at.started_at.present? %>

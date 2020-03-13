@@ -28,5 +28,9 @@ module UsersHelper
     elsif result.change_at_enum == '否認'
       '勤怠変更申請が否認されました。'
     end
- end
+  end
+  
+  def days_of_the_week
+    @week = %w[日 月 火 水 木 金 土]
+  end
 end
