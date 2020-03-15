@@ -2,6 +2,7 @@
 
 class AttendancesController < ApplicationController
   before_action :set_user, only: %i[edit_one_month update_one_month month_request_approval attendance_log]
+  before_action :set_attendance, only: %i[update edit_overwork_request update_overwork_request]
   before_action :logged_in_user, only: %i[update edit_one_month]
   before_action :admin_or_correct_user, only: %i[update edit_one_month update_one_month]
   before_action :set_one_month, only: %i[edit_one_month attendance_log]
@@ -9,22 +10,18 @@ class AttendancesController < ApplicationController
   UPDATE_ERROR_MSG = '勤怠登録に失敗しました。やり直してください。'
 
   def update
-    @user = User.find(params[:user_id])
-    @attendance = Attendance.find(params[:id])
     # 出勤時間が未登録であることを判定します。
-    if @attendance.started_at.nil?
-      if @attendance.update_attributes(started_at: Time.current.change(sec: 0))
-        flash[:info] = 'おはようございます！'
-      else
-        flash[:danger] = UPDATE_ERROR_MSG
-      end
-    elsif @attendance.finished_at.nil?
-      if @attendance.update_attributes(finished_at: Time.current.change(sec: 0))
-        flash[:info] = 'お疲れ様でした。'
-      else
-        flash[:danger] = UPDATE_ERROR_MSG
-      end
+    if upadte_started_at
+      flash[:info] = 'おはようございます！'
+    elsif upadte_finished_at
+      flash[:info] = 'お疲れ様でした。'
+    else
+      flash[:danger] = UPDATE_ERROR_MSG
     end
+
+    redirect_to @user
+  rescue StandardError => e
+    flash[:danger] = e.message
     redirect_to @user
   end
 
@@ -84,12 +81,10 @@ class AttendancesController < ApplicationController
 
   def edit_overwork_request
     @user = current_user
-    @attendance = @user.attendances.find(params[:id])
   end
 
   def update_overwork_request
     @user = current_user
-    @attendance = @user.attendances.find(params[:id])
     @attendance.redesignated_endtime = @user.designated_work_end_time.change(year: @attendance.worked_on.year,
                                                                              month: @attendance.worked_on.month,
                                                                              day: @attendance.worked_on.day)
@@ -217,5 +212,19 @@ class AttendancesController < ApplicationController
       flash[:danger] = '編集権限がありません。'
       redirect_to(root_url)
     end
+  end
+
+  def set_attendance
+    @attendance = @user.attendances.find(params[:id])
+  end
+
+  def upadte_started_at
+    return false unless @attendance.started_at.nil?
+    @attendance.update_attributes!(started_at: Time.current.change(sec: 0))
+  end
+
+  def upadte_finished_at
+    return false unless @attendance.finished_at.nil?
+    @attendance.update_attributes!(finished_at: Time.current.change(sec: 0))
   end
 end
