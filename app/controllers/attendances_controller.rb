@@ -61,9 +61,8 @@ class AttendancesController < ApplicationController
           attendance = Attendance.find(id)
           attendance.update_attributes!(item)
         else
-          ActiveRecord::Rollback # トランザクション内のＤＢ操作をロールバック
           success = false
-          break
+          raise ActiveRecord::Rollback # トランザクション内のＤＢ操作をロールバック
         end
       end
     end
