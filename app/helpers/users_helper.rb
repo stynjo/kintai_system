@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module UsersHelper
+  DAYS_OF_THE_WEEK = %w[日 月 火 水 木 金 土].freeze
+
   # 勤怠基本情報を指定のフォーマットで返します。
   def format_basic_info(time)
     format('%.2f', ((time.hour * 60) + time.min) / 60.0)
@@ -28,5 +30,9 @@ module UsersHelper
     elsif result.change_at_enum == '否認'
       '勤怠変更申請が否認されました。'
     end
- end
+  end
+
+  def day_of_week(week_index)
+    DAYS_OF_THE_WEEK[week_index]
+  end
 end
