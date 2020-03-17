@@ -215,7 +215,8 @@ class AttendancesController < ApplicationController
   end
 
   def set_attendance
-    @attendance = @user.attendances.find(params[:id])
+    @user = User.find(params[:user_id])
+    @attendance = Attendance.find(params[:id])
   end
 
   def upadte_started_at
