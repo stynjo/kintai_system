@@ -14,9 +14,9 @@ class ApplicationController < ActionController::Base
   # ログイン済みのユーザーか確認します。
   def logged_in_user
     return if logged_in?
-      store_location
-      flash[:danger] = 'ログインしてください。'
-      redirect_to login_url
+    store_location
+    flash[:danger] = 'ログインしてください。'
+    redirect_to login_url
   end
 
   # アクセスしたユーザーが現在ログインしているユーザーか確認します。
@@ -30,14 +30,8 @@ class ApplicationController < ActionController::Base
   end
 
   # ページ出力前に1ヶ月分のデータの存在を確認・セットします。
-  def set_one_month
-    @first_day = params[:date].nil? ?
-    Date.current.beginning_of_month : params[:date].to_date
-    @last_day = @first_day.end_of_month
-    @one_month = [*@first_day..@last_day]
-
-    @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
-
+  def create_one_month
+    set_one_month
     unless @one_month.count == @attendances.count
       ActiveRecord::Base.transaction do
         @one_month.each { |day| @user.attendances.create!(worked_on: day) }
@@ -50,9 +44,18 @@ class ApplicationController < ActionController::Base
   end
 
   def admin_access_ban
-    if current_user.admin?
-      flash[:danger] = '管理者はアクセスできません'
-      redirect_to root_url
-    end
+    return unless current_user.admin?
+    
+    flash[:danger] = '管理者はアクセスできません'
+    redirect_to root_url
+  end
+  
+  def set_one_month
+    @first_day = params[:date].nil? ?
+    Date.current.beginning_of_month : params[:date].to_date
+    @last_day = @first_day.end_of_month
+    @one_month = [*@first_day..@last_day]
+
+    @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
   end
 end
