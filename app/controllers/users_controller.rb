@@ -68,12 +68,11 @@ class UsersController < ApplicationController
     # fileはtmpに自動で一時保存される
     if params[:file].nil?
       flash[:danger] = 'インポートするCSVファイルを選択してください。'
-      redirect_to users_url
     else
       User.import(params[:file])
       flash[:success] = 'CSVインポートによるユーザー登録が完了しました。'
-      redirect_to users_url
     end
+    redirect_to users_url
   end
 
   def edit_basic_info; end
