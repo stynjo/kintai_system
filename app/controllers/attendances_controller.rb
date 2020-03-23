@@ -38,9 +38,6 @@ class AttendancesController < ApplicationController
           attendance = Attendance.find(id)
           attendance.update_attributes!(item)
           if attendance.edit_one_month_tomorrow == true
-            attendance.edit_finished_at = attendance.edit_finished_at.tomorrow
-            attendance.save
-          elsif attendance.edit_one_month_tomorrow == false && item['edit_started_at'] > item['edit_finished_at']
             success = false
             break
           end

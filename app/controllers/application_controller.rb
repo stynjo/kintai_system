@@ -54,7 +54,7 @@ class ApplicationController < ActionController::Base
     if params[:date].nil?
       @first_day = Date.current.beginning_of_month
     else
-      params[:date].to_date
+      @first_day = params[:date].to_date
     end
     @last_day = @first_day.end_of_month
     @one_month = [*@first_day..@last_day]
