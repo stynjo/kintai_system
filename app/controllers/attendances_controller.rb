@@ -121,19 +121,18 @@ class AttendancesController < ApplicationController
 
   # 勤怠認証申請の更新
   def update_month_request_approval
-    @user = current_user
     monthly_request_approval_params.each do |id, monthly|
       approval = Attendance.find(id)
       n = approval.id.to_s
-      @k = params[:attendances][n][:monthly_request_change]
-      if @k == 'true'
+      @request_change = params[:attendances][n][:monthly_request_change]
+      if @request_change == 'true'
         approval.update_attributes!(monthly)
         flash[:success] = '所属長承認申請を更新しました'
       else
         flash[:danger] = '無効な入力データがあった為、更新をキャンセルしました。'
       end
     end
-    redirect_to @user
+    redirect_to current_user
   end
 
   # 勤怠変更のおしらせ
