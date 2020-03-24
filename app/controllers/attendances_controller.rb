@@ -154,7 +154,7 @@ class AttendancesController < ApplicationController
         approval.started_at = approval.edit_started_at
         approval.finished_at = approval.edit_finished_at
         approval.update_attributes(monthly)
-        approval.change_at_change = false
+        # approval.change_at_change = false
         approval.save
         flash[:success] = '勤怠変更申請を更新しました。'
       else
@@ -170,10 +170,9 @@ class AttendancesController < ApplicationController
     @year = params[:year].to_i
     @month = params[:month].to_i
     select_att = "#{@year}-#{@month}-1"
-    if params[:year].present? && params[:month].present?
-      @attendances = Attendance.where(worked_on: select_att.in_time_zone.all_month)
-      @change_log = @attendances.where(change_at_change: true)
-    end
+    return unless params[:year].present? && params[:month].present?
+    @attendances = Attendance.where(worked_on: select_att.in_time_zone.all_month)
+    @change_log = @attendances.where(change_at_change: true)
   end
 
   private
