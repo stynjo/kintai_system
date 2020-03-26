@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Base < ApplicationRecord
   validates :name, presence: true
   validates :type, presence: true
