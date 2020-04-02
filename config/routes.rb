@@ -40,4 +40,8 @@ Rails.application.routes.draw do
   
   resources :bases do
   end
+
+  namespace :hoge do
+    resources :fuga, only: %i[index]
+  end
 end
